@@ -1,31 +1,35 @@
-   int A[2][3] = { 1,2,3,6,5,4 };
+    int A[2][3] = { 1,2,3,6,5,4 };
     int B[3][2] = { 1,2,3,4,5,6 };
-
+    
     int C[2][3];
-   
+    clock_t start_t, end_t, total_t;
+    //foram criadas 3 matrizes  duas delas foram preenchidas com valores inteiros e matriz restante sera a matriz resultado da multiplicações de matrizes 
 
- 
+    
+    start_t = clock();
+   
+    
 
     // Initialize all the times
-#pragma omp parallel  num_threads(3)
+#pragma omp parallel  num_threads(3)        //logo após foi chamada a diretiva #pragma omp parallel indicando que nesta seção de codigo o codigo iria ser paralelizado tambem foi usado num_threads() para poder ser indicato quantas threads seriam usadas para executar esta seção especifica neste caso trabalharemos com 3 threads 
     {
-        int id = omp_get_thread_num();
-       
-        for (int i = 0; i < 2; i++ ) {
-            
+        int id = omp_get_thread_num();    //com  omp_get_thread_num() foi renornado um inteiro indicando qual é a thread que esta sendo executada como o codigo é paralelo ele esta sendo executada separadamento e ao mesmo tempo
 
-                C[i][id] = A[i][id] * B[id][i];
-            
+        for (int i = 0; i < 2; i++) {   // como as matrizes são 3x2 e 2x3 será usado um loop for para apenas navegação entre as linhas ou colunas de cada matriz 
+
+
+            C[i][id] = A[i][id] * B[id][i];  // como temos 3 threads rodando em paralelo cada uma será responsavel por uma parte da das sabelas assim conseguindo executar até 3 multiplicações em paralelo, e como os dados estão sendo inseridos em outra matriz separada tambem em paralelo não existe nenhum problema de uma threads armazenar e substituir oque a outra armazenou pois os epaços da matriz são independentes 
+
 
 
         }
-       
 
-        
+
+
     }
 
 
-        for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 3; j++) {
 
             std::cout << C[i][j] << "  ";
@@ -34,3 +38,10 @@
 
 
     }
+      
+    end_t = clock();
+
+    total_t = (double)(end_t - start_t);
+
+    cout << endl;
+    cout << total_t;
