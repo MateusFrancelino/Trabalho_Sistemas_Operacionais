@@ -1,4 +1,14 @@
 
+#include <iostream>
+#include <omp.h>
+#include<time.h>
+using namespace std;
+
+int main()
+{
+
+    clock_t start, stop;
+  
 
     int array[120];
     int total = 0;
@@ -6,31 +16,27 @@
         array[i] = i;
     }
 
- 
 
-    
+      start = clock();
 
-    
-   
 
- 
-
-    // Initialize all the times
 #pragma omp parallel  num_threads(8)
     {
         int id = omp_get_thread_num();
         int valorarray = 0;
 
-        for (int i = id; i < 120; i+=8) {
+        for (int i = id; i < 120; i += 8) {
             valorarray += array[i];
         }
 
-       #pragma omp atomic
+#pragma omp atomic
         total += valorarray;
-        
+
     }
 
+    stop = clock();
 
-      
-    cout << total;
+    cout <<"tota:"<< total;
+    cout <<endl<<"Tempo Total: "<<stop - start;
+}
 
